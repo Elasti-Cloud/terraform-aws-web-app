@@ -1,7 +1,7 @@
-profile          = "dev-west1"
+profile          = "AWS_PROFILE_NAME"
 region           = "us-west-1"
-admin_ip         = "72.141.143.236/32"
-s3_bucket_source = "elasti-web-site-sample"
+admin_ip         = "HOME IP or RANGE cidr - 120.120.120.120/32"
+s3_bucket_source = "S3-BUCKET-NAME-WHITH-CODE"
 vpc_cidr         = "10.30.0.0/16"
 subnet_cidr = {
   public01  = "10.30.0.0/20"
@@ -20,9 +20,9 @@ instance_type = {
   jenkins     = "t3.micro"
 }
 key_name = {
-  application = "terraform"
-  bastion     = "bastion"
-  jenkins     = "jenkins"
+  application = "AWS-KEY-PAIR-NAME"
+  bastion     = "AWS-KEY-PAIR-NAME"
+  jenkins     = "AWS-KEY-PAIR-NAME"
 }
 
 tags = {

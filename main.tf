@@ -4,7 +4,7 @@ terraform {
 }
 # AWS Provider 
 provider "aws" {
-  version = "~> 2.0"
+  version = ">=2.5"
   profile = var.profile
   region  = var.region
 }

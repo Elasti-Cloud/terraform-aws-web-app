@@ -37,6 +37,18 @@ module "aws_app_layer" {
   asg_params       = var.asg_params
   tags             = var.tags
 }
+# Jenkins server
+module "aws_jenkins" {
+  source         = "./modules/aws_jenkins"
+  vpc_id         = module.aws_network.vpc_id
+  subnets_list   = module.aws_network.subnets_list
+  security_group = module.aws_security.security_group
+  ec2_profile    = module.aws_security.ec2_profile
+  app_lb         = module.aws_app_layer.app_lb
+
+  inst_params = var.inst_params
+  tags        = var.tags
+}
 # Bastion server for admin tasks
 module "aws_admin" {
   source         = "./modules/aws_admin"

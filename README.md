@@ -1,5 +1,8 @@
-# Terraform
-Deployment of infrustructure and application artifacts for a web site
+# Terraform with AWS
+Deployment of infrastructure and application artifacts for a web site
+
+# Architectural diagram
+![Architectural diagram](website_app.png)
 
 # Requirements
 * AWS account and a user with programmatic access and Admin rights _(required to create IAM roles)_
@@ -9,5 +12,7 @@ Deployment of infrustructure and application artifacts for a web site
 * All variables that require values are in the __terraform.tfvars__ file
 * Jenkins configuration is out of scope for this project but it was tested with Blue Ocean and Pipeline: aws plugins 
 
-# Architectural diagram
-![Architectural diagram](website_app.png)
+# Notes
+* __Provisioned infrastructure will result in costs__
+* Only one NAT gateway included to decrease cost
+* The cron task included in user data for the Launch Template syncs with s3 bucket __every minute__. It is done for test purposes and an interval should be increased to avoid excessive # of s3 requests. 

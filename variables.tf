@@ -19,29 +19,12 @@ variable "s3_bucket_source" {
   type        = string
 }
 
-variable "vpc_cidr" {
-  description = "CIDR for VPC"
-  type        = string
+variable "network" {
+  description = "CIDR for VPC, CIDRs for 2 public and 2 private subnets"
 }
 
-variable "subnet_cidr" {
-  description = "List of subnets 2 public and 2 private"
-  type        = map(string)
-}
-
-variable "ami" {
+variable "inst_params" {
   description = "AMIs to use. Make sure to align with a region"
-  type        = map(string)
-}
-
-variable "instance_type" {
-  description = "Instance types"
-  type        = map(string)
-}
-
-variable "key_name" {
-  description = "Key-pairs for the respective servers"
-  type        = map(string)
 }
 
 variable "tags" {
@@ -49,7 +32,7 @@ variable "tags" {
   type        = map(string)
 }
 
-variable "asg_param" {
+variable "asg_params" {
   description = "AutoScaling group parameters"
   type        = map(string)
 }

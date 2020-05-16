@@ -2,3 +2,6 @@ LOCAL.tfvars
 .terraform/plugins/windows_amd64/terraform-provider-aws_v2.62.0_x4.exe
 .terraform/plugins/windows_amd64/lock.json
 .terraform/modules/modules.json
+ready.tfplan
+terraform.tfstate
+terraform.tfstate.backup

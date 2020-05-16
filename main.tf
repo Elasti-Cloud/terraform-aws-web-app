@@ -1,6 +1,6 @@
 # Main configuration
 terraform {
-  required_version = ">=0.12.0"
+  required_version = ">=0.12.6"
 }
 # AWS Provider 
 provider "aws" {
@@ -12,10 +12,8 @@ provider "aws" {
 module "aws_network" {
   source = "./modules/aws_network"
 
-  region      = var.region
-  vpc_cidr    = var.vpc_cidr
-  subnet_cidr = var.subnet_cidr
-  tags        = var.tags
+  network = var.network
+  tags    = var.tags
 }
 # IAM roles, Security Groups
 module "aws_security" {
@@ -35,10 +33,8 @@ module "aws_app_layer" {
   ec2_profile    = module.aws_security.ec2_profile
 
   s3_bucket_source = var.s3_bucket_source
-  ami              = var.ami
-  instance_type    = var.instance_type
-  key_name         = var.key_name
-  asg_param        = var.asg_param
+  inst_params      = var.inst_params
+  asg_params       = var.asg_params
   tags             = var.tags
 }
 # Bastion server for admin tasks
@@ -47,8 +43,6 @@ module "aws_admin" {
   subnets_list   = module.aws_network.subnets_list
   security_group = module.aws_security.security_group
 
-  ami           = var.ami
-  instance_type = var.instance_type
-  key_name      = var.key_name
-  tags          = var.tags
+  inst_params = var.inst_params
+  tags        = var.tags
 }

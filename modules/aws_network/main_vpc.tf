@@ -1,16 +1,18 @@
+# AWS Network
+# ///
 # VPC
 resource "aws_vpc" "vpc" {
   cidr_block           = var.network["vpc_cidr"]
   enable_dns_hostnames = true
   tags                 = var.tags
 }
-
+# ////////////////
 # Internet Gateway
 resource "aws_internet_gateway" "igw" {
   vpc_id = aws_vpc.vpc.id
   tags   = var.tags
 }
-
+# //////////////
 # Public subnets
 data "aws_availability_zones" "azs" {}
 
@@ -27,7 +29,7 @@ resource "aws_subnet" "public" {
     Environment = var.tags["Environment"]
   }
 }
-
+# ///////////////
 # Private subnets
 resource "aws_subnet" "private" {
   for_each                = var.network["private_cidr"]
@@ -42,20 +44,20 @@ resource "aws_subnet" "private" {
     Environment = var.tags["Environment"]
   }
 }
-
+# ///////////
 # EIP for NAT
 resource "aws_eip" "eip_nat" {
   vpc  = true
   tags = var.tags
 }
-
+# ///////////
 # NAT Gateway
 resource "aws_nat_gateway" "ngw" {
   allocation_id = aws_eip.eip_nat.id
   subnet_id     = aws_subnet.public[0].id
   tags          = var.tags
 }
-
+# ////////////////////
 # Public routing table
 resource "aws_route_table" "rt_public" {
   vpc_id = aws_vpc.vpc.id
@@ -77,7 +79,7 @@ resource "aws_route_table_association" "rt_pub_subnets" {
   subnet_id      = each.value.id
   route_table_id = aws_route_table.rt_public.id
 }
-
+# /////////////////////
 # Private routing table
 resource "aws_route_table" "rt_private" {
   vpc_id = aws_vpc.vpc.id

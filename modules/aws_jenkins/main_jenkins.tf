@@ -1,3 +1,5 @@
+# Jenkins server and LB connection
+# ///////////////
 # Jenkins traffic
 resource "aws_lb_target_group" "lb_jenkins_target" {
   name        = "jenkins-target"
@@ -23,7 +25,7 @@ resource "aws_lb_target_group_attachment" "lb_to_jenkins" {
   target_id        = aws_instance.jenkins_server.id
   port             = 8080
 }
-
+# ////////////////////////////////////
 # Jenkins stand-alone server for CI/CD
 resource "aws_instance" "jenkins_server" {
   ami                    = var.inst_params["ami"]["jenkins"]
@@ -31,6 +33,7 @@ resource "aws_instance" "jenkins_server" {
   key_name               = var.inst_params["key_name"]["jenkins"]
   subnet_id              = var.subnets_list["private"][1].id
   vpc_security_group_ids = [var.security_group["jenkins"].id]
+  # User Data for the Ubuntu OS
   user_data = base64encode(<<EOF
 #!/bin/bash
 apt-get update -y

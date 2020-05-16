@@ -1,4 +1,5 @@
 # Application Layer
+# ///////////////
 # Launch Template
 resource "aws_launch_template" "launch_template" {
   name = "application"
@@ -13,6 +14,7 @@ resource "aws_launch_template" "launch_template" {
     resource_type = "instance"
     tags          = var.tags
   }
+  # User Data for Amazon Linux OS
   user_data = base64encode(<<EOF
 #!/bin/bash
 yum update -y
@@ -27,7 +29,7 @@ aws s3 sync s3://${var.s3_bucket_source} .
 EOF
   )
 }
-
+# /////////////////
 # AutoScaling Group
 resource "aws_autoscaling_group" "asg_application" {
   name                = "application"
@@ -44,7 +46,7 @@ resource "aws_autoscaling_group" "asg_application" {
   }
 
 }
-
+# /////////////
 # Load Balancer
 resource "aws_lb" "app_lb" {
   name               = "application-lb"
@@ -54,6 +56,7 @@ resource "aws_lb" "app_lb" {
   subnets            = [for subnet in var.subnets_list["public"] : subnet.id]
   tags               = var.tags
 }
+# ////////////
 # HTTP traffic
 resource "aws_lb_target_group" "lb_http_target" {
   name        = "http-target"

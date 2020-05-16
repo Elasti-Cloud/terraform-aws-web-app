@@ -1,6 +1,6 @@
 # Main configuration
 terraform {
-  required_version = ">=0.12.0"
+  required_version = ">=0.12.6"
 }
 # AWS Provider 
 provider "aws" {
@@ -12,11 +12,10 @@ provider "aws" {
 module "aws_network" {
   source = "./modules/aws_network"
 
-  region      = var.region
-  vpc_cidr    = var.vpc_cidr
-  subnet_cidr = var.subnet_cidr
-  tags        = var.tags
+  network = var.network
+  tags    = var.tags
 }
+/*
 # IAM roles, Security Groups
 module "aws_security" {
   source = "./modules/aws_security"
@@ -51,4 +50,4 @@ module "aws_admin" {
   instance_type = var.instance_type
   key_name      = var.key_name
   tags          = var.tags
-}
+}*/

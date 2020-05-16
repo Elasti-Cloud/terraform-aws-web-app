@@ -19,14 +19,8 @@ variable "s3_bucket_source" {
   type        = string
 }
 
-variable "vpc_cidr" {
-  description = "CIDR for VPC"
-  type        = string
-}
-
-variable "subnet_cidr" {
-  description = "List of subnets 2 public and 2 private"
-  type        = map(string)
+variable "network" {
+  description = "CIDR for VPC, CIDRs for public and private subnets"
 }
 
 variable "ami" {

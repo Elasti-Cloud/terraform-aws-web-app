@@ -5,7 +5,7 @@ output "bastion_public_ip" {
 
 output "jenkins_ip" {
   description = "Jenkins server: privet IPv4"
-  value       = module.aws_app_layer.jenkins_ip
+  value       = module.aws_jenkins.jenkins_ip
 }
 
 output "lb_dns" {

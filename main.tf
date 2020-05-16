@@ -8,6 +8,7 @@ provider "aws" {
   profile = var.profile
   region  = var.region
 }
+# ////////////////////////////////////////////
 # VPC, Subnets, IGW, NAT GW, RT public/private
 module "aws_network" {
   source = "./modules/aws_network"
@@ -15,6 +16,7 @@ module "aws_network" {
   network = var.network
   tags    = var.tags
 }
+# //////////////////////////
 # IAM roles, Security Groups
 module "aws_security" {
   source = "./modules/aws_security"
@@ -24,6 +26,7 @@ module "aws_security" {
   tags                     = var.tags
   iam_policies_arn_jenkins = var.iam_policies_arn_jenkins
 }
+# ////////////////////////////////////////
 # ELB, ASG, LaunchTemplate, Jenkins server
 module "aws_app_layer" {
   source         = "./modules/aws_app_layer"
@@ -37,6 +40,20 @@ module "aws_app_layer" {
   asg_params       = var.asg_params
   tags             = var.tags
 }
+# //////////////
+# Jenkins server
+module "aws_jenkins" {
+  source         = "./modules/aws_jenkins"
+  vpc_id         = module.aws_network.vpc_id
+  subnets_list   = module.aws_network.subnets_list
+  security_group = module.aws_security.security_group
+  ec2_profile    = module.aws_security.ec2_profile
+  app_lb         = module.aws_app_layer.app_lb
+
+  inst_params = var.inst_params
+  tags        = var.tags
+}
+# //////////////////////////////
 # Bastion server for admin tasks
 module "aws_admin" {
   source         = "./modules/aws_admin"

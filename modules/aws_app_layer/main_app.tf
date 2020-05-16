@@ -5,9 +5,9 @@ resource "aws_launch_template" "launch_template" {
   iam_instance_profile {
     name = var.ec2_profile["s3read"].name
   }
-  image_id               = var.ami["application"]
-  instance_type          = var.instance_type["application"]
-  key_name               = var.key_name["application"]
+  image_id               = var.inst_params["ami"]["application"]
+  instance_type          = var.inst_params["type"]["application"]
+  key_name               = var.inst_params["key_name"]["application"]
   vpc_security_group_ids = [var.security_group["application"].id]
   tag_specifications {
     resource_type = "instance"
@@ -31,10 +31,10 @@ EOF
 # AutoScaling Group
 resource "aws_autoscaling_group" "asg_application" {
   name                = "application"
-  max_size            = var.asg_param["max_size"]
-  min_size            = var.asg_param["min_size"]
-  desired_capacity    = var.asg_param["desired_capacity"]
-  vpc_zone_identifier = [var.subnets_list["private01"].id, var.subnets_list["private02"].id]
+  max_size            = var.asg_params["max_size"]
+  min_size            = var.asg_params["min_size"]
+  desired_capacity    = var.asg_params["desired_capacity"]
+  vpc_zone_identifier = [for subnet in var.subnets_list["private"] : subnet.id]
   health_check_type   = "ELB"
   target_group_arns   = [aws_lb_target_group.lb_http_target.arn]
 
@@ -51,7 +51,7 @@ resource "aws_lb" "app_lb" {
   internal           = false
   load_balancer_type = "application"
   security_groups    = [var.security_group["load_balancer"].id]
-  subnets            = [var.subnets_list["public01"].id, var.subnets_list["public02"].id]
+  subnets            = [for subnet in var.subnets_list["public"] : subnet.id]
   tags               = var.tags
 }
 # HTTP traffic
@@ -101,10 +101,10 @@ resource "aws_lb_target_group_attachment" "lb_to_jenkins" {
 
 # Jenkins stand-alone server for CI/CD
 resource "aws_instance" "jenkins_server" {
-  ami                    = var.ami["jenkins"]
-  instance_type          = var.instance_type["jenkins"]
-  key_name               = var.key_name["jenkins"]
-  subnet_id              = var.subnets_list["private02"].id
+  ami                    = var.inst_params["ami"]["jenkins"]
+  instance_type          = var.inst_params["type"]["jenkins"]
+  key_name               = var.inst_params["key_name"]["jenkins"]
+  subnet_id              = var.subnets_list["private"][1].id
   vpc_security_group_ids = [var.security_group["jenkins"].id]
   user_data = base64encode(<<EOF
 #!/bin/bash

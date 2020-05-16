@@ -53,8 +53,8 @@ EOF
 
 resource "aws_iam_role_policy_attachment" "jenkins_attach" {
   role       = aws_iam_role.ec2_jenkins_role.name
-  count      = length(var.iam_policies_arn_jenkins)
-  policy_arn = var.iam_policies_arn_jenkins[count.index]
+  for_each   = toset(var.iam_policies_arn_jenkins)
+  policy_arn = each.value
 }
 
 resource "aws_iam_instance_profile" "ec2_jenkins_profile" {

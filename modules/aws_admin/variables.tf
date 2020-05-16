@@ -6,7 +6,11 @@ variable "security_group" {
   description = "Dict of Security Groups"
 }
 
-variable "ami" {
+variable "inst_params" {
+  description = "AMIs to use. Make sure to align with a region"
+}
+
+/*variable "ami" {
   description = "AMIs to use. Make sure to align with a region"
   type        = map(string)
 }
@@ -19,7 +23,7 @@ variable "instance_type" {
 variable "key_name" {
   description = "Key-pairs for the respective servers"
   type        = map(string)
-}
+}*/
 
 variable "tags" {
   description = "Dictionary of tags"

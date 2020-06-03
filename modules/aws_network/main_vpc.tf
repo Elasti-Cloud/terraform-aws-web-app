@@ -14,13 +14,11 @@ resource "aws_internet_gateway" "igw" {
 }
 # //////////////
 # Public subnets
-data "aws_availability_zones" "azs" {}
-
 resource "aws_subnet" "public" {
   for_each                = var.network["public_cidr"]
   vpc_id                  = aws_vpc.vpc.id
   cidr_block              = each.value
-  availability_zone       = data.aws_availability_zones.azs.names[each.key]
+  availability_zone       = each.key
   map_public_ip_on_launch = true
 
   tags = {
@@ -35,7 +33,7 @@ resource "aws_subnet" "private" {
   for_each                = var.network["private_cidr"]
   vpc_id                  = aws_vpc.vpc.id
   cidr_block              = each.value
-  availability_zone       = data.aws_availability_zones.azs.names[each.key]
+  availability_zone       = each.key
   map_public_ip_on_launch = false
 
   tags = {
@@ -47,14 +45,16 @@ resource "aws_subnet" "private" {
 # ///////////
 # EIP for NAT
 resource "aws_eip" "eip_nat" {
+  for_each = aws_subnet.public
   vpc  = true
   tags = var.tags
 }
 # ///////////
 # NAT Gateway
 resource "aws_nat_gateway" "ngw" {
-  allocation_id = aws_eip.eip_nat.id
-  subnet_id     = aws_subnet.public[0].id
+  for_each = aws_subnet.public
+  allocation_id = aws_eip.eip_nat[each.key].id
+  subnet_id     = aws_subnet.public[each.key].id
   tags          = var.tags
 }
 # ////////////////////
